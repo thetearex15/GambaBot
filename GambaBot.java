@@ -24,7 +24,7 @@ import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 
 public class GambaBot extends ListenerAdapter {
     public static void main(String[] args) {
-        JDA jda = JDABuilder.createDefault("MTA4MDc3MTY1MDU2OTY1NDI4Mg.G9c5FG.Vi-whU2FIdcHVjOPmSClOvztn-_HjNfM_b84qQ")
+        JDA jda = JDABuilder.createDefault(TOKEN)
                 .addEventListeners(new GambaBot())
                 .build();
 
