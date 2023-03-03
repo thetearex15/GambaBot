@@ -15,10 +15,11 @@ c.execute('''CREATE TABLE IF NOT EXISTS money
 
 # Init the user if it is their first message
 def init_user(user_id):
-        balance = 0
-        last_daily = 0
-        cap = 10000
-        c.execute('REPLACE INTO money (user_id, balance, last_daily, cap) VALUES (?, ?, ?, ?)', (user_id, balance, 0, cap))
+    balance = 0
+    last_daily = 0
+    cap = 10000
+    c.execute('REPLACE INTO money (user_id, balance, last_daily, cap) VALUES (?, ?, ?, ?)', (user_id, balance, 0, cap))
+    return
 
 # The coinflip command
 @bot.command()
@@ -98,15 +99,15 @@ async def upgrade_cap(ctx):
     c.execute('UPDATE money SET balance = ?, cap = ? WHERE user_id = ?', (new_balance, new_cap, user_id))
     conn.commit()
 
-#Shows the user their stats
 @bot.command()
 async def stats(ctx):
     user_id = str(ctx.author.id)
-    c.execute('SELECT balance, income, cap FROM money WHERE user_id=?', (user_id,))
+    c.execute('SELECT balance, cap FROM money WHERE user_id=?', (user_id,))
     result = c.fetchone()
-    balance, income, cap = result
-
-    response = "Your balance is " + balance + "coins." + "\nYour income is " + income + "\nYour maximum capacity is " + cap
-    await ctx.send(response)
+    if result is None:
+        await ctx.send("You need to use the daily command to start playing.")
+        return
+    balance,cap=result
+    await ctx.send(f"Your balance is {balance} coins. \nYour maximum capacity is {cap}.")
 
 bot.run(os.getenv('DISCORD_TOKEN'))
