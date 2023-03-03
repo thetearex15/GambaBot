@@ -98,4 +98,12 @@ async def upgrade_cap(ctx):
     c.execute('UPDATE money SET balance = ?, cap = ? WHERE user_id = ?', (new_balance, new_cap, user_id))
     conn.commit()
 
+@bot.command()
+async def stats(ctx):
+    user_id = str(ctx.author.id)
+    c.execute('SELECT balance, cap FROM money WHERE user_id=?', (user_id,))
+    result = c.fetchone()
+    balance,cap=result
+    await ctx.send(f"Your balance is {balance} coins. \nYour maximum capacity is {cap}.")
+
 bot.run(os.getenv('DISCORD_TOKEN'))
