@@ -51,11 +51,11 @@ async def daily(ctx):
     else:
         balance, last_daily = result
 
-    if time.time() - last_daily < 300:
-        await ctx.send("You can only claim your daily reward once every 5 minutes.")
+    if time.time() - last_daily < 86400:
+        await ctx.send("You can only claim your daily reward once every 24 hours.")
         return
 
-    new_balance = balance + 10
+    new_balance = balance + 100
     await ctx.send(f"You claimed your daily reward of 10 coins! Your new balance is {new_balance} coins.")
 
     c.execute('REPLACE INTO money (user_id, balance, last_daily) VALUES (?, ?, ?)', (user_id, new_balance, int(time.time())))
