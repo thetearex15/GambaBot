@@ -11,7 +11,7 @@ c = conn.cursor()
 
 # Create table if it doesn't exist
 c.execute('''CREATE TABLE IF NOT EXISTS money
-             (user_id TEXT PRIMARY KEY, balance INTEGER, last_daily INTEGER, cap INTEGER)''')
+             (user_id TEXT PRIMARY KEY, balance INTEGER, last_daily INTEGER, cap INTEGER, income INTEGER)''')
 
 # Init the user if it is their first message
 def init_user(user_id):
@@ -74,6 +74,7 @@ async def daily(ctx):
     c.execute('UPDATE money SET balance = ?, last_daily = ? WHERE user_id = ?', (new_balance, int(time.time()), user_id))
     conn.commit()
 
+#Upgrades max capacity of coins
 @bot.command()
 async def upgrade_cap(ctx):
     user_id = str(ctx.author.id)
@@ -96,5 +97,16 @@ async def upgrade_cap(ctx):
 
     c.execute('UPDATE money SET balance = ?, cap = ? WHERE user_id = ?', (new_balance, new_cap, user_id))
     conn.commit()
+
+#Shows the user their stats
+@bot.command()
+async def stats(ctx):
+    user_id = str(ctx.author.id)
+    c.execute('SELECT balance, income, cap FROM money WHERE user_id=?', (user_id,))
+    result = c.fetchone()
+    balance, income, cap = result
+
+    response = "Your balance is " + balance + "coins." + "\nYour income is " + income + "\nYour maximum capacity is " + cap
+    await ctx.send(response)
 
 bot.run(os.getenv('DISCORD_TOKEN'))
