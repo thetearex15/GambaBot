@@ -15,10 +15,11 @@ c.execute('''CREATE TABLE IF NOT EXISTS money
 
 # Init the user if it is their first message
 def init_user(user_id):
-        balance = 0
-        last_daily = 0
-        cap = 10000
-        c.execute('REPLACE INTO money (user_id, balance, last_daily, cap) VALUES (?, ?, ?, ?)', (user_id, balance, 0, cap))
+    balance = 0
+    last_daily = 0
+    cap = 10000
+    c.execute('REPLACE INTO money (user_id, balance, last_daily, cap) VALUES (?, ?, ?, ?)', (user_id, balance, 0, cap))
+    return
 
 # The coinflip command
 @bot.command()
