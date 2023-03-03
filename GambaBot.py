@@ -103,6 +103,9 @@ async def stats(ctx):
     user_id = str(ctx.author.id)
     c.execute('SELECT balance, cap FROM money WHERE user_id=?', (user_id,))
     result = c.fetchone()
+    if result is None:
+        await ctx.send("You need to use the daily command to start playing.")
+        return
     balance,cap=result
     await ctx.send(f"Your balance is {balance} coins. \nYour maximum capacity is {cap}.")
 
